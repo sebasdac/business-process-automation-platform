@@ -3,9 +3,9 @@
 <div class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</div>
 
 <ng-container *ngIf="form() as f">
-  <div class="page-header">
+  <div class="page-header field-editor-header">
     <h1>{{ f.name }}</h1>
-    <div class="form-actions">
+    <div class="field-editor-actions">
       <a [routerLink]="['/applications', applicationId, 'forms']" class="btn-secondary">Back to Forms</a>
       <button type="button" class="btn-secondary" (click)="toggleStatus()">
         {{ f.isActive ? 'Deactivate' : 'Activate' }}
@@ -21,7 +21,7 @@
     </span>
   </p>
 
-  <table class="data-table">
+  <table class="data-table field-editor-table">
     <thead>
       <tr>
         <th>Order</th>
@@ -34,20 +34,20 @@
     </thead>
     <tbody>
       <tr *ngFor="let field of f.fields; let i = index">
-        <td>
+        <td data-label="Order" class="field-order-actions">
           <button type="button" (click)="moveField(field, -1)" [disabled]="i === 0">↑</button>
           <button type="button" (click)="moveField(field, 1)" [disabled]="i === f.fields.length - 1">↓</button>
         </td>
-        <td>{{ field.fieldName }}</td>
-        <td>{{ field.label }}</td>
-        <td>{{ field.fieldType }}</td>
-        <td>{{ field.isRequired ? 'Yes' : 'No' }}</td>
-        <td class="actions">
+        <td data-label="Field Name">{{ field.fieldName }}</td>
+        <td data-label="Label">{{ field.label }}</td>
+        <td data-label="Type">{{ field.fieldType }}</td>
+        <td data-label="Required">{{ field.isRequired ? 'Yes' : 'No' }}</td>
+        <td data-label="Actions" class="actions field-row-actions">
           <button type="button" (click)="openEditField(field)">Edit</button>
           <button type="button" (click)="deleteField(field)">Delete</button>
         </td>
       </tr>
-      <tr *ngIf="f.fields.length === 0">
+      <tr *ngIf="f.fields.length === 0" class="field-empty-row">
         <td colspan="6" class="empty">No fields yet. Click "+ Add Field" to start building this form.</td>
       </tr>
     </tbody>
@@ -97,7 +97,7 @@
         <input id="optionsCsv" type="text" formControlName="optionsCsv" placeholder="e.g. Sick, Vacation, Personal" />
       </ng-container>
 
-      <div class="form-actions">
+      <div class="field-editor-form-actions">
         <button type="submit" class="btn-primary" [disabled]="saving">
           {{ saving ? 'Saving...' : 'Save Field' }}
         </button>

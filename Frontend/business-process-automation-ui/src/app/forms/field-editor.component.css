@@ -1,0 +1,158 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.field-editor-header {
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.field-editor-header h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.field-editor-actions,
+.field-editor-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.field-editor-actions {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.field-editor-actions > a,
+.field-editor-actions > button,
+.field-editor-form-actions > button {
+  display: inline-flex;
+  min-width: 132px;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+.field-editor-table {
+  width: 100%;
+}
+
+.field-order-actions,
+.field-row-actions {
+  align-items: center;
+  gap: 8px;
+}
+
+.field-order-actions button,
+.field-row-actions button {
+  min-height: 36px;
+  padding: 6px 10px;
+}
+
+.field-editor-form-actions {
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .field-editor-header {
+    align-items: flex-start;
+  }
+
+  .field-editor-header h1,
+  .field-editor-actions {
+    width: 100%;
+  }
+
+  .field-editor-actions {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .field-editor-actions > a,
+  .field-editor-actions > button {
+    flex: 1 1 100%;
+  }
+
+  .field-editor-table,
+  .field-editor-table tbody,
+  .field-editor-table tr,
+  .field-editor-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .field-editor-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
+  .field-editor-table tbody tr:not(.field-empty-row) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eef1f8;
+  }
+
+  .field-editor-table tbody tr:not(.field-empty-row) td {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 4px 0;
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .field-editor-table tbody tr:not(.field-empty-row) td::before {
+    content: attr(data-label);
+    color: #4a5268;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .field-editor-table tbody tr:not(.field-empty-row) .field-order-actions,
+  .field-editor-table tbody tr:not(.field-empty-row) .field-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .field-editor-table tbody tr:not(.field-empty-row) .field-row-actions::before {
+    flex: 0 0 100%;
+  }
+
+  .field-row-actions button {
+    flex: 1 1 0;
+  }
+
+  .field-editor-table .empty {
+    display: block;
+    padding: 20px 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .field-editor-table .empty::before {
+    content: none;
+  }
+
+  .field-editor-form-actions {
+    justify-content: stretch;
+  }
+
+  .field-editor-form-actions > button {
+    flex: 1 1 132px;
+  }
+}

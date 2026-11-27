@@ -10,7 +10,8 @@ import { FormService } from './form.service';
   selector: 'app-field-editor',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, LoadingSpinnerComponent],
-  templateUrl: './field-editor.component.html'
+  templateUrl: './field-editor.component.html',
+  styleUrl: './field-editor.component.css'
 })
 export class FieldEditorComponent implements OnInit {
   applicationId!: number;
