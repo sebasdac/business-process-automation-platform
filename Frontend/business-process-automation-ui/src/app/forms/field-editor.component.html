@@ -21,37 +21,109 @@
     </span>
   </p>
 
-  <table class="data-table field-editor-table">
-    <thead>
-      <tr>
-        <th>Order</th>
-        <th>Field Name</th>
-        <th>Label</th>
-        <th>Type</th>
-        <th>Required</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let field of f.fields; let i = index">
-        <td data-label="Order" class="field-order-actions">
-          <button type="button" (click)="moveField(field, -1)" [disabled]="i === 0">↑</button>
-          <button type="button" (click)="moveField(field, 1)" [disabled]="i === f.fields.length - 1">↓</button>
-        </td>
-        <td data-label="Field Name">{{ field.fieldName }}</td>
-        <td data-label="Label">{{ field.label }}</td>
-        <td data-label="Type">{{ field.fieldType }}</td>
-        <td data-label="Required">{{ field.isRequired ? 'Yes' : 'No' }}</td>
-        <td data-label="Actions" class="actions field-row-actions">
-          <button type="button" (click)="openEditField(field)">Edit</button>
-          <button type="button" (click)="deleteField(field)">Delete</button>
-        </td>
-      </tr>
-      <tr *ngIf="f.fields.length === 0" class="field-empty-row">
-        <td colspan="6" class="empty">No fields yet. Click "+ Add Field" to start building this form.</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="form-builder">
+    <aside class="field-toolbox" aria-labelledby="field-toolbox-heading">
+      <h2 id="field-toolbox-heading">Field types</h2>
+      <p>Drag a field into the canvas or select it to add.</p>
+      <div
+        id="fieldToolbox"
+        class="field-toolbox-items"
+        cdkDropList
+        [cdkDropListData]="fieldTypes"
+        [cdkDropListConnectedTo]="['formCanvas']"
+        [cdkDropListSortingDisabled]="true"
+        [cdkDropListEnterPredicate]="toolboxEnterPredicate"
+        (cdkDropListDropped)="dropField($event)"
+      >
+        <button
+          *ngFor="let type of fieldTypes"
+          type="button"
+          class="toolbox-field"
+          [attr.aria-label]="'Add ' + type + ' field'"
+          cdkDrag
+          [cdkDragData]="toolboxDragData(type)"
+          [cdkDragDisabled]="addingField()"
+          [disabled]="addingField()"
+          (click)="addFieldType(type)"
+        >
+          <span class="toolbox-field-icon" aria-hidden="true">+</span>
+          <span>{{ type }}</span>
+          <span class="cdk-drag-preview-label" *cdkDragPreview>{{ type }}</span>
+        </button>
+      </div>
+    </aside>
+
+    <section class="form-canvas" aria-labelledby="form-canvas-heading">
+      <div class="canvas-heading">
+        <div>
+          <h2 id="form-canvas-heading">Form canvas</h2>
+          <p>Drag fields to reorder them. Use the arrow buttons to reorder with a keyboard.</p>
+        </div>
+        <span>{{ f.fields.length }} {{ f.fields.length === 1 ? 'field' : 'fields' }}</span>
+      </div>
+
+      <div
+        id="formCanvas"
+        class="canvas-field-list"
+        cdkDropList
+        [cdkDropListData]="f.fields"
+        [cdkDropListConnectedTo]="['fieldToolbox']"
+        [cdkDropListEnterPredicate]="canvasEnterPredicate"
+        [cdkDropListDisabled]="reordering() || addingField()"
+        (cdkDropListDropped)="dropField($event)"
+      >
+        <article
+          *ngFor="let field of f.fields; let i = index"
+          class="canvas-field"
+          cdkDrag
+          [cdkDragData]="canvasDragData(field)"
+          [cdkDragDisabled]="reordering() || addingField()"
+        >
+          <div class="canvas-field-main">
+            <button
+              type="button"
+              class="drag-handle"
+              cdkDragHandle
+              [attr.aria-label]="'Drag ' + field.label + ' to reorder'"
+              title="Drag to reorder"
+            >⠿</button>
+            <div class="canvas-field-description">
+              <span class="canvas-field-label">{{ field.label }}</span>
+              <span class="canvas-field-meta">{{ field.fieldName }} · {{ field.fieldType }}<span *ngIf="field.isRequired"> · Required</span></span>
+            </div>
+            <div class="canvas-field-actions">
+              <button type="button" class="btn-secondary" (click)="openEditField(field)">Edit</button>
+              <button type="button" class="btn-secondary" (click)="deleteField(field)">Remove</button>
+            </div>
+          </div>
+
+          <div class="canvas-field-order" aria-label="Keyboard reorder controls">
+            <button
+              type="button"
+              class="btn-secondary"
+              [disabled]="i === 0 || reordering()"
+              [attr.aria-label]="'Move ' + field.label + ' up'"
+              (click)="moveField(field, -1)"
+            >Move up</button>
+            <button
+              type="button"
+              class="btn-secondary"
+              [disabled]="i === f.fields.length - 1 || reordering()"
+              [attr.aria-label]="'Move ' + field.label + ' down'"
+              (click)="moveField(field, 1)"
+            >Move down</button>
+          </div>
+          <ng-template cdkDragPlaceholder>
+            <div class="canvas-field-placeholder" aria-hidden="true"></div>
+          </ng-template>
+        </article>
+
+        <div *ngIf="f.fields.length === 0" class="canvas-empty">
+          Drag a field type here or select one from the toolbox to start building this form.
+        </div>
+      </div>
+    </section>
+  </div>
 
   <div class="form-card" *ngIf="showFieldEditor" style="margin-top: 24px; max-width: 640px;">
     <h1 style="font-size: 1.1rem;">{{ editingFieldId ? 'Edit Field' : 'Add Field' }}</h1>
